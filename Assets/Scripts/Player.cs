@@ -4,12 +4,17 @@ using UnityEngine.InputSystem;
 public class Player : MonoBehaviour
 {
     [SerializeField] private float speed;
+    [SerializeField] private float linearRecoilRecoveryForce;
+    public bool IsSpinning { get; private set; }
 
     private Vector2 moveDirection;
     private Rigidbody2D rb;
 
     [SerializeField] private Transform weaponHolder;
     private Weapon weapon;
+    private bool isAttacking;
+
+    private Vector2 recoilVelocity;
 
     private void Start()
     {
@@ -20,7 +25,10 @@ public class Player : MonoBehaviour
     private void SwitchWeapon(int weaponIndex)
     {
         weapon.gameObject.SetActive(false);
+
         weapon = weaponHolder.GetChild(weaponIndex).GetComponent<Weapon>();
+        weapon.SetPlayer(this);
+
         weapon.gameObject.SetActive(true);
     }
 
@@ -31,7 +39,18 @@ public class Player : MonoBehaviour
 
     public void OnAttack(InputAction.CallbackContext context)
     {
-        weapon.Attack();
+        if (context.started) isAttacking = true;
+        if (context.canceled) isAttacking = false;
+    }
+
+    public void ApplyLinearRecoil(Vector2 direction, float force)
+    {
+        recoilVelocity += force * direction;
+    }
+
+    public void ApplyAngularRecoil(float force)
+    {
+        rb.AddTorque(force);
     }
 
     public void OnSwitchWeapon(InputAction.CallbackContext context)
@@ -48,7 +67,31 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate()
     {
-        rb.linearVelocity = speed * moveDirection;
+        if (IsSpinning)
+        {
+            rb.linearVelocity = recoilVelocity;
+        }
+        else
+        {
+            rb.linearVelocity = speed * moveDirection + recoilVelocity;
+        }
+
+        recoilVelocity = Vector2.MoveTowards(recoilVelocity, Vector2.zero, linearRecoilRecoveryForce);
+
+        if (Mathf.Abs(rb.angularVelocity) < 180f)
+        {
+            IsSpinning = false;
+            rb.angularVelocity = 0f;
+        }
+        else
+        {
+            IsSpinning = true;
+        }
+    }
+
+    private void Update()
+    {
+        if (isAttacking) weapon.Attack();
     }
 
 }

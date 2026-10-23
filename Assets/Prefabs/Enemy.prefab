@@ -10,8 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1416655173683249471}
   - component: {fileID: 1952954081386799221}
-  - component: {fileID: 2273142831496473707}
   - component: {fileID: 6524236171824466711}
+  - component: {fileID: -6131323309098246494}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Enemy
@@ -93,7 +93,22 @@ SpriteRenderer:
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
   m_SpriteSortPoint: 0
---- !u!58 &2273142831496473707
+--- !u!114 &6524236171824466711
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4942274991267812832}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b5a924066154a24783c7d0a16e7e5f6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Enemy
+  speed: 2
+  gunshotBloodFx: {fileID: 5368804909693379928, guid: b4801f655456c09499c85b599124d553, type: 3}
+  deathBloodFx: {fileID: 6182860136652019465, guid: 07b1f955f0d6d734cae37b3b1afe1ff1, type: 3}
+--- !u!58 &-6131323309098246494
 CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -129,17 +144,3 @@ CircleCollider2D:
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
   m_Radius: 0.5
---- !u!114 &6524236171824466711
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4942274991267812832}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8b5a924066154a24783c7d0a16e7e5f6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Enemy
-  speed: 2
-  gettingShotFx: {fileID: 5368804909693379928, guid: b4801f655456c09499c85b599124d553, type: 3}

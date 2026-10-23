@@ -1,8 +1,26 @@
 using UnityEngine;
+
+public enum WeaponType
+{
+    Knife,
+    Pistol,
+    Shotgun,
+    AR
+}
 public abstract class Weapon : MonoBehaviour
 {
+    [SerializeField] private WeaponType weaponType;
+
     [SerializeField] private float attackCooldown;
     private float nextAttackTime;
+
+    protected Player player;
+    [SerializeField] protected float recoilForce;
+
+    public void SetPlayer(Player player)
+    {
+        this.player = player;
+    }
 
     protected bool IsOnCooldown()
     {
@@ -18,7 +36,7 @@ public abstract class Weapon : MonoBehaviour
     {
         if (collider.CompareTag("Enemy"))
         {
-            collider.gameObject.GetComponent<Enemy>().Die();
+            collider.gameObject.GetComponent<Enemy>().DieByWeapon(weaponType);
         }
     }
 }
