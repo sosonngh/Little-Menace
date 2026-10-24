@@ -17,6 +17,7 @@ public class EnemySpawner : MonoBehaviour
             Vector2 spawnPoint = (Vector2)transform.position + Random.insideUnitCircle.normalized * spawnRadius;
             Instantiate(enemyPrefab, spawnPoint, Quaternion.identity);
         }
+
     }
 
     private void Update()

@@ -4,10 +4,8 @@ public class Knife : Weapon
 {
     [SerializeField] private float attackRadius;
 
-    public override void Attack()
+    protected override void SpecificAttackBehaviour()
     {
-        if (IsOnCooldown()) return;
-
         Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, attackRadius);
 
         foreach (Collider2D hit in hits)

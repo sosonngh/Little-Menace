@@ -8,9 +8,12 @@ public class Enemy : MonoBehaviour
     [SerializeField] private ParticleSystem gunshotBloodFx;
     [SerializeField] private ParticleSystem deathBloodFx;
 
+    private Rigidbody2D rb;
+
     private void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+        rb = GetComponent<Rigidbody2D>();
     }
 
     public void DieByWeapon(WeaponType weaponType)
@@ -32,7 +35,7 @@ public class Enemy : MonoBehaviour
     {
         Vector2 moveDirection = (player.transform.position - transform.position).normalized;
 
-        transform.position += (Vector3)(speed * Time.deltaTime * moveDirection);
+        rb.linearVelocity = speed * moveDirection;
     }
 
 

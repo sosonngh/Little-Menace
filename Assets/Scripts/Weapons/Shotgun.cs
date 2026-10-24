@@ -10,10 +10,8 @@ public class Shotgun : Weapon
 
     [SerializeField] private FollowMouse weaponHolder;
 
-    public override void Attack()
+    protected override void SpecificAttackBehaviour()
     {
-        if (IsOnCooldown()) return;
-
         for (int i = 0; i < bulletsPerShot; i++)
         {
             Vector2 direction = Quaternion.Euler(0, 0, Random.Range(-spreadAreaDeg / 2, spreadAreaDeg / 2)) * transform.up;
@@ -33,6 +31,7 @@ public class Shotgun : Weapon
 
         player.ApplyAngularRecoil(angularRecoilForce);
 
+        GameManager.Instance.ShakeCamera(0.3f, 0.3f);
     }
 
     private void OnDrawGizmos()

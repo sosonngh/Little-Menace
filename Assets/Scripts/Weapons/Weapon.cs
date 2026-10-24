@@ -5,7 +5,8 @@ public enum WeaponType
     Knife,
     Pistol,
     Shotgun,
-    AR
+    AR,
+    AlmightyPush
 }
 public abstract class Weapon : MonoBehaviour
 {
@@ -17,26 +18,47 @@ public abstract class Weapon : MonoBehaviour
     protected Player player;
     [SerializeField] protected float recoilForce;
 
+    [SerializeField] private int maxAmmo;
+    private int curAmmo;
+
+    private void Start()
+    {
+        Reload();
+    }
+
     public void SetPlayer(Player player)
     {
         this.player = player;
     }
-
-    protected bool IsOnCooldown()
-    {
-        if (Time.time < nextAttackTime) return true;
-
-        nextAttackTime = Time.time + attackCooldown;
-        return false;
-    }
-
-    public abstract void Attack();
 
     protected void KillIfEnemy(Collider2D collider)
     {
         if (collider.CompareTag("Enemy"))
         {
             collider.gameObject.GetComponent<Enemy>().DieByWeapon(weaponType);
+            GameManager.Instance.IncrementKillCount();
         }
     }
+
+    public void Attack()
+    {
+        if (Time.time < nextAttackTime) return;
+
+        if (curAmmo == 0) return;
+
+        SpecificAttackBehaviour();
+
+        curAmmo--;
+
+        nextAttackTime = Time.time + attackCooldown;
+    }
+
+    public void Reload()
+    {
+        if (curAmmo == maxAmmo) return;
+
+        curAmmo = maxAmmo;
+    }
+
+    protected abstract void SpecificAttackBehaviour();
 }

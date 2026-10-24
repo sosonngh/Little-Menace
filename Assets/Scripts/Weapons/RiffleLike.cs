@@ -11,10 +11,8 @@ public class RiffleLike : Weapon
 
     private Coroutine aimWiggleCoroutine = null;
 
-    public override void Attack()
+    protected override void SpecificAttackBehaviour()
     {
-        if (IsOnCooldown()) return;
-
         RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.up, attackRange);
 
         if (hit) KillIfEnemy(hit.collider);
@@ -24,9 +22,8 @@ public class RiffleLike : Weapon
 
         if (hasAimWiggle)
         {
-            if (aimWiggleCoroutine != null) StopCoroutine(nameof(EnableAimWiggle));
-
-            aimWiggleCoroutine = StartCoroutine(EnableAimWiggle());
+            StopAllCoroutines();
+            StartCoroutine(EnableAimWiggle());
         }
     }
 
