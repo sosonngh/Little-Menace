@@ -36,9 +36,4 @@ public class RiffleLike : Weapon
         weaponHolder.SetAimWiggleOffset(0);
     }
 
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawLine(transform.position, transform.position + transform.up * attackRange);
-    }
 }

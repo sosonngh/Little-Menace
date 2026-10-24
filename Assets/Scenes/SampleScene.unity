@@ -163,9 +163,54 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 350f1efad3f34464db93e692eff4d1a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
-  killMilestones: 
+  killsPerAddEnemy: 100
   killScoreText: {fileID: 357456603}
   cameraHolder: {fileID: 791673788}
+  enemySpawner: {fileID: 1970218094}
+  CenterNotification: {fileID: 760370606}
+  gamePhaseArr:
+  - latestWeaponUnlockedIndex: 0
+    enemySpawnInterval: 2
+    maxEnemiesPerSpawn: 2
+    enemyArr:
+    - {fileID: 4942274991267812832, guid: 3ad11aee23792894a8096ecf7d3b6e69, type: 3}
+    nextPhaseMilestone: 20
+  - latestWeaponUnlockedIndex: 1
+    enemySpawnInterval: 2
+    maxEnemiesPerSpawn: 3
+    enemyArr:
+    - {fileID: 4942274991267812832, guid: 3ad11aee23792894a8096ecf7d3b6e69, type: 3}
+    - {fileID: 4942274991267812832, guid: 176575dcf5c6f7b42b4f5ce855f2e443, type: 3}
+    nextPhaseMilestone: 50
+  - latestWeaponUnlockedIndex: 2
+    enemySpawnInterval: 1
+    maxEnemiesPerSpawn: 2
+    enemyArr:
+    - {fileID: 4942274991267812832, guid: 3ad11aee23792894a8096ecf7d3b6e69, type: 3}
+    - {fileID: 4942274991267812832, guid: 6ce4234f0773f6b4eaf1472ab583ec70, type: 3}
+    nextPhaseMilestone: 150
+  - latestWeaponUnlockedIndex: 3
+    enemySpawnInterval: 1
+    maxEnemiesPerSpawn: 3
+    enemyArr:
+    - {fileID: 4942274991267812832, guid: 3ad11aee23792894a8096ecf7d3b6e69, type: 3}
+    - {fileID: 4942274991267812832, guid: 176575dcf5c6f7b42b4f5ce855f2e443, type: 3}
+    - {fileID: 4942274991267812832, guid: 6ce4234f0773f6b4eaf1472ab583ec70, type: 3}
+    nextPhaseMilestone: 300
+  - latestWeaponUnlockedIndex: 4
+    enemySpawnInterval: 1
+    maxEnemiesPerSpawn: 4
+    enemyArr:
+    - {fileID: 4942274991267812832, guid: 3ad11aee23792894a8096ecf7d3b6e69, type: 3}
+    - {fileID: 4942274991267812832, guid: 176575dcf5c6f7b42b4f5ce855f2e443, type: 3}
+    - {fileID: 4942274991267812832, guid: 6ce4234f0773f6b4eaf1472ab583ec70, type: 3}
+    nextPhaseMilestone: -1
+  currentPhase:
+    latestWeaponUnlockedIndex: 0
+    enemySpawnInterval: 0
+    maxEnemiesPerSpawn: 0
+    enemyArr: []
+    nextPhaseMilestone: 0
 --- !u!1 &357456601
 GameObject:
   m_ObjectHideFlags: 0
@@ -201,7 +246,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 200}
-  m_SizeDelta: {x: 300, y: 50}
+  m_SizeDelta: {x: 600, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &357456603
 MonoBehaviour:
@@ -225,8 +270,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 0
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: fd33024a802aef7419f3cdb87e6e4954, type: 2}
+  m_sharedMaterial: {fileID: 5541752041812265511, guid: fd33024a802aef7419f3cdb87e6e4954, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -855,6 +900,166 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &760370602
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 760370603}
+  - component: {fileID: 760370605}
+  - component: {fileID: 760370604}
+  - component: {fileID: 760370606}
+  m_Layer: 5
+  m_Name: CenterNotification
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &760370603
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 760370602}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1738256062}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 800, y: 50}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &760370604
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 760370602}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_text: NEW WEAPON UNLOCKED
+  m_isRightToLeft: 0
+  m_fontAsset: {fileID: 11400000, guid: fd33024a802aef7419f3cdb87e6e4954, type: 2}
+  m_sharedMaterial: {fileID: 5541752041812265511, guid: fd33024a802aef7419f3cdb87e6e4954, type: 2}
+  m_fontSharedMaterials: []
+  m_fontMaterial: {fileID: 0}
+  m_fontMaterials: []
+  m_fontColor32:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontColor: {r: 1, g: 1, b: 1, a: 1}
+  m_enableVertexGradient: 0
+  m_colorMode: 3
+  m_fontColorGradient:
+    topLeft: {r: 1, g: 1, b: 1, a: 1}
+    topRight: {r: 1, g: 1, b: 1, a: 1}
+    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
+    bottomRight: {r: 1, g: 1, b: 1, a: 1}
+  m_fontColorGradientPreset: {fileID: 0}
+  m_spriteAsset: {fileID: 0}
+  m_tintAllSprites: 0
+  m_StyleSheet: {fileID: 0}
+  m_TextStyleHashCode: -1183493901
+  m_overrideHtmlColors: 0
+  m_faceColor:
+    serializedVersion: 2
+    rgba: 4294967295
+  m_fontSize: 36
+  m_fontSizeBase: 36
+  m_fontWeight: 400
+  m_enableAutoSizing: 0
+  m_fontSizeMin: 18
+  m_fontSizeMax: 72
+  m_fontStyle: 0
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
+  m_textAlignment: 65535
+  m_characterSpacing: 0
+  m_characterHorizontalScale: 1
+  m_wordSpacing: 0
+  m_lineSpacing: 0
+  m_lineSpacingMax: 0
+  m_paragraphSpacing: 0
+  m_charWidthMaxAdj: 0
+  m_TextWrappingMode: 1
+  m_wordWrappingRatios: 0.4
+  m_overflowMode: 0
+  m_linkedTextComponent: {fileID: 0}
+  parentLinkedComponent: {fileID: 0}
+  m_enableKerning: 0
+  m_ActiveFontFeatures: 6e72656b
+  m_enableExtraPadding: 0
+  checkPaddingRequired: 0
+  m_isRichText: 1
+  m_EmojiFallbackSupport: 1
+  m_parseCtrlCharacters: 1
+  m_isOrthographic: 1
+  m_isCullingEnabled: 0
+  m_horizontalMapping: 0
+  m_verticalMapping: 0
+  m_uvLineOffset: 0
+  m_geometrySortingOrder: 0
+  m_IsTextObjectScaleStatic: 0
+  m_VertexBufferAutoSizeReduction: 0
+  m_useMaxVisibleDescender: 1
+  m_pageToDisplay: 1
+  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_isUsingLegacyAnimationComponent: 0
+  m_isVolumetricText: 0
+  m_hasFontAssetChanged: 0
+  m_baseMaterial: {fileID: 0}
+  m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!222 &760370605
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 760370602}
+  m_CullTransparentMesh: 1
+--- !u!95 &760370606
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 760370602}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: a78b5c07a05fd7f4bb0c4aac8a352f52, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &783177910
 GameObject:
   m_ObjectHideFlags: 0
@@ -1072,7 +1277,7 @@ CircleCollider2D:
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: 0, y: 0}
-  m_Radius: 0.5
+  m_Radius: 0.25
 --- !u!212 &783177914
 SpriteRenderer:
   serializedVersion: 2
@@ -1164,8 +1369,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player
   speed: 5
-  health: 30
-  almightyPushRadius: 10
+  health: 300
+  almightyPushRadius: 20
+  almightyPushDuration: 1
+  almightyPushShakeMagnitude: 0.75
   linearRecoilRecoveryForce: 1
   weaponHolder: {fileID: 1376982961}
 --- !u!1 &791673786
@@ -1432,7 +1639,7 @@ MonoBehaviour:
   attackCooldown: 0.75
   recoilForce: 25
   maxAmmo: 3
-  attackRange: 3
+  attackRange: 5
   spreadAreaDeg: 45
   bulletsPerShot: 8
   angularRecoilForce: 500
@@ -1721,6 +1928,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 357456602}
+  - {fileID: 760370603}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -1772,10 +1980,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3361ad3d73675dd4fb6b9550cb303b78, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemySpawner
-  spawnInterval: 2
-  enemiesPerSpawn: 2
   spawnRadius: 10
-  enemyPrefab: {fileID: 4942274991267812832, guid: 3ad11aee23792894a8096ecf7d3b6e69, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

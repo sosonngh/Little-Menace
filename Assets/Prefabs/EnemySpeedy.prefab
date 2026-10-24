@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: -6131323309098246494}
   - component: {fileID: -829610601216632252}
   m_Layer: 0
-  m_Name: Enemy
+  m_Name: EnemySpeedy
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -30,7 +30,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.75, y: 0.75, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -85,7 +85,7 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: -2413806693520163455, guid: a86470a33a6bf42c4b3595704624658b, type: 3}
-  m_Color: {r: 0.504707, g: 0.9496855, b: 0.5087284, a: 1}
+  m_Color: {r: 0.52691734, g: 0.9685534, b: 0.6891423, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -106,9 +106,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b5a924066154a24783c7d0a16e7e5f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Enemy
-  speed: 2
+  speed: 3
   gunshotBloodFx: {fileID: 5368804909693379928, guid: b4801f655456c09499c85b599124d553, type: 3}
   deathBloodFx: {fileID: 6182860136652019465, guid: 07b1f955f0d6d734cae37b3b1afe1ff1, type: 3}
+  deathSubBloodFx: {fileID: 237296227611171537, guid: 96133fc6335db9b438b01d8be57a1088, type: 3}
 --- !u!58 &-6131323309098246494
 CircleCollider2D:
   m_ObjectHideFlags: 0

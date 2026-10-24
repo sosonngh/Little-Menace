@@ -8,6 +8,9 @@ public class Player : MonoBehaviour
     [SerializeField] private float health;
     [SerializeField] private float almightyPushRadius;
 
+    [SerializeField] private float almightyPushDuration;
+    [SerializeField] private float almightyPushShakeMagnitude;
+
     [SerializeField] private float linearRecoilRecoveryForce;
 
     public bool IsSpinning { get; private set; }
@@ -55,7 +58,7 @@ public class Player : MonoBehaviour
             GameManager.Instance.IncrementKillCount();
         }
 
-        GameManager.Instance.ShakeCamera(0.5f, 0.5f);
+        GameManager.Instance.ShakeCamera(almightyPushDuration, almightyPushShakeMagnitude);
     }
 
     private void Die()
@@ -65,6 +68,9 @@ public class Player : MonoBehaviour
 
     private void SwitchWeapon(int weaponIndex)
     {
+        // check if the weapon is unlocked
+        if (GameManager.Instance.currentPhase.latestWeaponUnlockedIndex < weaponIndex) return;
+
         weapon.gameObject.SetActive(false);
 
         weapon = weaponHolder.GetChild(weaponIndex).GetComponent<Weapon>();
@@ -76,7 +82,7 @@ public class Player : MonoBehaviour
     // INPUT METHODS
     public void OnMove(InputAction.CallbackContext context)
     {
-        moveDirection = context.ReadValue<Vector2>();
+        moveDirection = context.ReadValue<Vector2>().normalized;
     }
 
     public void OnAttack(InputAction.CallbackContext context)

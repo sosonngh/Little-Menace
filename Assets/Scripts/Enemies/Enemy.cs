@@ -7,6 +7,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] private float speed;
     [SerializeField] private ParticleSystem gunshotBloodFx;
     [SerializeField] private ParticleSystem deathBloodFx;
+    [SerializeField] private ParticleSystem deathSubBloodFx;
 
     private Rigidbody2D rb;
 
@@ -22,6 +23,7 @@ public class Enemy : MonoBehaviour
         float angle = Mathf.Atan2(directionFromPlayer.y, directionFromPlayer.x) * Mathf.Rad2Deg;
 
         Instantiate(deathBloodFx, transform.position, Quaternion.Euler(0, 180, 0));
+        Instantiate(deathSubBloodFx, transform.position, Quaternion.Euler(0, 180, 0));
 
         if (weaponType is WeaponType.Pistol or WeaponType.AR or WeaponType.Shotgun)
         {

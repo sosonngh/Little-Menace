@@ -17,8 +17,6 @@ public class Shotgun : Weapon
             Vector2 direction = Quaternion.Euler(0, 0, Random.Range(-spreadAreaDeg / 2, spreadAreaDeg / 2)) * transform.up;
             RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, direction, attackRange);
 
-            Debug.DrawRay(transform.position, direction * attackRange, Color.red, 0.5f);
-
             foreach(RaycastHit2D hit in hits)
             {
                 if (hit) KillIfEnemy(hit.collider);
@@ -34,9 +32,4 @@ public class Shotgun : Weapon
         GameManager.Instance.ShakeCamera(0.3f, 0.3f);
     }
 
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawLine(transform.position, transform.position + transform.up * attackRange);
-    }
 }
