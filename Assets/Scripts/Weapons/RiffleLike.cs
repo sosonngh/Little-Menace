@@ -9,31 +9,50 @@ public class RiffleLike : Weapon
 
     [SerializeField] private FollowMouse weaponHolder;
 
+    [SerializeField] private Animator muzzleFlashAnim;
+
     private Coroutine aimWiggleCoroutine = null;
 
     protected override void SpecificAttackBehaviour()
     {
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.up, attackRange);
+        Debug.Log("Attack from riffle like");
+
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.right, attackRange);
 
         if (hit) KillIfEnemy(hit.collider);
 
         //recoil knockback
-        player.ApplyLinearRecoil(-transform.up, recoilForce);
+        player.ApplyLinearRecoil(-transform.right, recoilForce);
 
         if (hasAimWiggle)
         {
-            StopAllCoroutines();
-            StartCoroutine(EnableAimWiggle());
+            if (aimWiggleCoroutine != null)
+            {
+                StopCoroutine(aimWiggleCoroutine);
+                aimWiggleCoroutine = null;
+            }
+
+            aimWiggleCoroutine = StartCoroutine(EnableAimWiggle());
         }
+
+        muzzleFlashAnim.Play("MuzzleFlash");
+    }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawLine(transform.position, transform.position + transform.right * attackRange);
     }
 
     private IEnumerator EnableAimWiggle()
-    {
+    {   
         weaponHolder.SetAimWiggleOffset(aimWiggleAreaDeg);
 
         yield return new WaitForSeconds(1f);
 
         weaponHolder.SetAimWiggleOffset(0);
+
+        aimWiggleCoroutine = null;
     }
 
 }

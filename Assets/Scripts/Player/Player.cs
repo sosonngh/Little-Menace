@@ -18,6 +18,8 @@ public class Player : MonoBehaviour
     private Vector2 moveDirection;
     private Rigidbody2D rb;
 
+    [SerializeField] PlayerSprite sprite;
+
     [SerializeField] private Transform weaponHolder;
     private Weapon weapon;
     private bool isAttacking;
@@ -28,6 +30,7 @@ public class Player : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         weapon = weaponHolder.GetChild(0).GetComponent<Weapon>();
+        weapon.SetPlayer(this);
     }
 
     // getting hit
@@ -59,6 +62,8 @@ public class Player : MonoBehaviour
         }
 
         GameManager.Instance.ShakeCamera(almightyPushDuration, almightyPushShakeMagnitude);
+        // anim
+        sprite.Cry(almightyPushDuration);
     }
 
     private void Die()
@@ -124,18 +129,29 @@ public class Player : MonoBehaviour
         if (IsSpinning)
         {
             rb.linearVelocity = recoilVelocity;
+            // handle sprite behavior
+            sprite.SetIsMoving(false);
         }
         else
         {
             rb.linearVelocity = speed * moveDirection + recoilVelocity;
+            // handle sprite behavior
+            sprite.SetIsMoving(moveDirection.magnitude > 0);
         }
 
         recoilVelocity = Vector2.MoveTowards(recoilVelocity, Vector2.zero, linearRecoilRecoveryForce);
 
         if (Mathf.Abs(rb.angularVelocity) < 180f)
         {
-            IsSpinning = false;
-            rb.angularVelocity = 0f;
+            if (IsSpinning)
+            {
+                IsSpinning = false;
+                rb.angularVelocity = 0f;
+                // animation
+                sprite.StandUp();
+                transform.rotation = Quaternion.Euler(0, 0, 0);
+            }
+
         }
         else
         {
@@ -146,6 +162,7 @@ public class Player : MonoBehaviour
     private void Update()
     {
         if (isAttacking) weapon.Attack();
+
     }
 
 }

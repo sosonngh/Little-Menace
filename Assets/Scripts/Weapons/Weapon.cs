@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public enum WeaponType
@@ -21,9 +22,27 @@ public abstract class Weapon : MonoBehaviour
     [SerializeField] private int maxAmmo;
     private int curAmmo;
 
+    private const float ANIMATION_DURATION = 0.5f;
+    [SerializeField] private float reloadDuration;
+    [SerializeField] private Animator reloadAnimator;
+    private Coroutine reloadCoroutine = null;
+
     private void Start()
     {
-        Reload();
+        curAmmo = maxAmmo;
+    }
+
+    private void OnEnable()
+    {
+        // stop reload coroutine and animation, otherwise it will break cuz the coroutine will never end
+        if (reloadCoroutine != null)
+        {
+            StopCoroutine(reloadCoroutine);
+            reloadCoroutine = null;
+        }
+
+
+        reloadAnimator.Play("Idle");
     }
 
     public void SetPlayer(Player player)
@@ -42,22 +61,47 @@ public abstract class Weapon : MonoBehaviour
 
     public void Attack()
     {
+        Debug.Log(curAmmo);
+        Debug.Log(reloadCoroutine);
+
+        if (reloadCoroutine != null) return;
+
         if (Time.time < nextAttackTime) return;
 
         if (curAmmo == 0) return;
 
         SpecificAttackBehaviour();
 
-        curAmmo--;
+        // handle infinite ammo thing
+        if (maxAmmo != -1) curAmmo--;
 
         nextAttackTime = Time.time + attackCooldown;
     }
 
     public void Reload()
     {
+        if (maxAmmo == -1) return;
+
+        if (reloadCoroutine != null) return;
+
         if (curAmmo == maxAmmo) return;
 
+        reloadCoroutine = StartCoroutine(ReloadCoroutine());
+        reloadAnimator.speed = ANIMATION_DURATION / reloadDuration;
+        reloadAnimator.Play("Reload");
+    }
+
+    private IEnumerator ReloadCoroutine()
+    {
+        Debug.Log("reload started");
+
+        yield return new WaitForSeconds(reloadDuration);
+
         curAmmo = maxAmmo;
+
+        reloadCoroutine = null;
+
+        Debug.Log("reload finished");
     }
 
     protected abstract void SpecificAttackBehaviour();
