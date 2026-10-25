@@ -1,11 +1,10 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
     [SerializeField] private float speed;
-    [SerializeField] private float health;
+    [SerializeField] private int health;
     [SerializeField] private float almightyPushRadius;
 
     [SerializeField] private float almightyPushDuration;
@@ -14,6 +13,7 @@ public class Player : MonoBehaviour
     [SerializeField] private float linearRecoilRecoveryForce;
 
     public bool IsSpinning { get; private set; }
+    public bool IsActive { get; private set; }
 
     private Vector2 moveDirection;
     private Rigidbody2D rb;
@@ -26,23 +26,35 @@ public class Player : MonoBehaviour
 
     private Vector2 recoilVelocity;
 
+    private AudioSource audioSource;
+    [SerializeField] private AudioClip almightyPushClip;
+
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         weapon = weaponHolder.GetChild(0).GetComponent<Weapon>();
         weapon.SetPlayer(this);
+
+        IsActive = true;
+
+        audioSource = GetComponent<AudioSource>();
     }
 
     // getting hit
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if (!IsActive) return;
+
         if (!collision.CompareTag("Enemy")) return;
 
         health--;
 
+        GameManager.Instance.UpdateHealthUI(health);
+
         if (health <= 0)
         {
             Die();
+            return;
         }
 
         ActivateAlmightyPush();
@@ -50,6 +62,8 @@ public class Player : MonoBehaviour
 
     private void ActivateAlmightyPush()
     {
+        audioSource.PlayOneShot(almightyPushClip);
+
         // i hate it but i think trying to use weapon kill feature would be too much effort
         Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, almightyPushRadius);
 
@@ -63,16 +77,21 @@ public class Player : MonoBehaviour
 
         GameManager.Instance.ShakeCamera(almightyPushDuration, almightyPushShakeMagnitude);
         // anim
-        sprite.Cry(almightyPushDuration);
+        sprite.Cry(almightyPushDuration + 0.5f);
     }
 
     private void Die()
     {
-        SceneManager.LoadScene(0);
+        GameManager.Instance.GameOver();
+
+        sprite.Cry(10f);
+        IsActive = false;
     }
 
     private void SwitchWeapon(int weaponIndex)
     {
+        if (!IsActive) return;
+
         // check if the weapon is unlocked
         if (GameManager.Instance.currentPhase.latestWeaponUnlockedIndex < weaponIndex) return;
 
@@ -87,22 +106,34 @@ public class Player : MonoBehaviour
     // INPUT METHODS
     public void OnMove(InputAction.CallbackContext context)
     {
+        if (!IsActive)
+        {
+            moveDirection = Vector2.zero; 
+            return;
+        }
+
         moveDirection = context.ReadValue<Vector2>().normalized;
     }
 
     public void OnAttack(InputAction.CallbackContext context)
     {
+        if (!IsActive) return;
+
         if (context.started) isAttacking = true;
         if (context.canceled) isAttacking = false;
     }
 
     public void OnReload(InputAction.CallbackContext context)
     {
+        if (!IsActive) return;
+
         weapon.Reload();
     }
 
     public void OnSwitchWeapon(InputAction.CallbackContext context)
     {
+        if (!IsActive) return;
+
         switch (context.control.name)
         {
             case "1": SwitchWeapon(0); break;
@@ -116,16 +147,20 @@ public class Player : MonoBehaviour
 
     public void ApplyLinearRecoil(Vector2 direction, float force)
     {
+        if (!IsActive) return;
+
         recoilVelocity += force * direction;
     }
 
     public void ApplyAngularRecoil(float force)
     {
+        if (!IsActive) return;
+
         rb.AddTorque(force);
     }
 
     private void FixedUpdate()
-    {
+    { 
         if (IsSpinning)
         {
             rb.linearVelocity = recoilVelocity;
@@ -161,6 +196,8 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
+        if (!IsActive) return;
+
         if (isAttacking) weapon.Attack();
 
     }

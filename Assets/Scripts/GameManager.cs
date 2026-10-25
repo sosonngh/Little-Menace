@@ -1,6 +1,8 @@
 using System;
+using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [System.Serializable]
 public class GamePhase
@@ -26,25 +28,38 @@ public class GameManager : MonoBehaviour
     [SerializeField] private CameraShake cameraHolder;
     [SerializeField] private EnemySpawner enemySpawner;
     [SerializeField] private Animator CenterNotification;
+    [SerializeField] private Transform HeartsContainer;
     //
 
     [SerializeField] private GamePhase[] gamePhaseArr;
 
     public GamePhase currentPhase;
 
+    // audio
+    private AudioSource audioSource;
+    [SerializeField] private AudioClip gameOverClip;
+    [SerializeField] private AudioClip newPhaseReached;
+
     private void Awake()
     {
         Instance = this;
+        audioSource = GetComponent<AudioSource>();
     }
 
     private void Start()
     {
         ActivatePhase(0);
         lastMilestone = gamePhaseArr[gamePhaseArr.Length - 2].nextPhaseMilestone;
+
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Confined;
+
     }
 
     private void ActivatePhase(int phaseIndex)
     {
+        audioSource.PlayOneShot(newPhaseReached);
+
         currentPhase = gamePhaseArr[phaseIndex];
 
         enemySpawner.SetSpawnSettings(currentPhase.enemySpawnInterval, currentPhase.maxEnemiesPerSpawn, currentPhase.enemyArr);
@@ -58,6 +73,14 @@ public class GameManager : MonoBehaviour
     public void ShakeCamera(float duration, float magnitude)
     {
         cameraHolder.Shake(duration, magnitude);
+    }
+
+    public void UpdateHealthUI(int curHealth)
+    {
+        for (int i = 0; i < HeartsContainer.childCount; i++)
+        {
+            HeartsContainer.GetChild(i).gameObject.SetActive(curHealth > i);
+        }
     }
 
     public void IncrementKillCount()
@@ -89,6 +112,23 @@ public class GameManager : MonoBehaviour
         }
 
         killScoreText.text = $"{killCount} / {currentPhase.nextPhaseMilestone}";
+    }
+
+
+    public void GameOver()
+    {
+        StartCoroutine(GameOverCoroutine());
+    }
+
+    private IEnumerator GameOverCoroutine()
+    {
+        audioSource.PlayOneShot(gameOverClip);
+
+        cameraHolder.Shake(3f, 2f);
+
+        yield return new WaitForSeconds(5f);
+
+        SceneManager.LoadScene(0);
     }
 
 }

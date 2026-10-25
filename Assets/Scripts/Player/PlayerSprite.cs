@@ -1,33 +1,12 @@
 using System.Collections;
 using UnityEngine;
 
-public class PlayerSprite : MonoBehaviour
+public class PlayerSprite : SpriteAnim
 {
-    private bool isMoving;
 
-    private Animator animator;
-    private SpriteRenderer sr;
+    [SerializeField] Sprite idle = null;
+    [SerializeField] Sprite cry = null;
 
-    [SerializeField] Sprite idle;
-    [SerializeField] Sprite cry;
-
-    private void Start()
-    {
-        animator = GetComponent<Animator>();
-        sr = GetComponent<SpriteRenderer>();
-    }
-
-    //
-    public void SetFlip(bool state)
-    {
-        sr.flipX = state;
-    }
-
-    public void SetIsMoving(bool state)
-    {
-        isMoving = state;
-        animator.SetBool("IsMoving" , isMoving);
-    }
 
     public void StandUp()
     {
@@ -44,7 +23,7 @@ public class PlayerSprite : MonoBehaviour
     {
         sr.sprite = cry;
 
-        yield return new WaitForSeconds(duration + 0.5f);
+        yield return new WaitForSeconds(duration);
 
         sr.sprite = idle;
     }

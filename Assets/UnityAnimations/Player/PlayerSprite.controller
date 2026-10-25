@@ -38,7 +38,7 @@ AnimatorStateMachine:
   m_ChildStates:
   - serializedVersion: 1
     m_State: {fileID: -6409914795641597546}
-    m_Position: {x: 250, y: 210, z: 0}
+    m_Position: {x: 240, y: 210, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 5707210359021705039}
     m_Position: {x: 250, y: 100, z: 0}
@@ -61,7 +61,7 @@ AnimatorController:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Sprite
+  m_Name: PlayerSprite
   serializedVersion: 5
   m_AnimatorParameters:
   - m_Name: IsMoving

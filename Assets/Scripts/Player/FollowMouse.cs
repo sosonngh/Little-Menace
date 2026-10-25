@@ -18,6 +18,8 @@ public class FollowMouse : MonoBehaviour
 
     private void Update()
     {
+        if (!player.IsActive) return;
+
         // don't track mouse if is spinning
         if (player.IsSpinning) return;
 

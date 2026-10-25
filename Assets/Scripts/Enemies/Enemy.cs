@@ -1,4 +1,6 @@
 using UnityEngine;
+using UnityEngine.Audio;
+using UnityEngine.U2D;
 
 public class Enemy : MonoBehaviour
 {
@@ -9,12 +11,17 @@ public class Enemy : MonoBehaviour
     [SerializeField] private ParticleSystem deathBloodFx;
     [SerializeField] private ParticleSystem deathSubBloodFx;
 
+    [SerializeField] private SpriteAnim sprite;
+
     private Rigidbody2D rb;
+    private AudioSource audioSource;
+
 
     private void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
         rb = GetComponent<Rigidbody2D>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     public void DieByWeapon(WeaponType weaponType)
@@ -30,14 +37,20 @@ public class Enemy : MonoBehaviour
             Instantiate(gunshotBloodFx, transform.position, Quaternion.Euler(transform.rotation.x - angle, 90, 0));
         }
 
+        audioSource.pitch = Random.Range(0.8f, 1.2f);
+        AudioSource.PlayClipAtPoint(audioSource.clip, transform.position, 1.75f);
+
         Destroy(gameObject);
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         Vector2 moveDirection = (player.transform.position - transform.position).normalized;
 
         rb.linearVelocity = speed * moveDirection;
+
+        sprite.SetIsMoving(moveDirection.magnitude > 0);
+        sprite.SetFlip(moveDirection.x > 0);
     }
 
 

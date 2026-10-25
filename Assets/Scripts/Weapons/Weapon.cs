@@ -27,9 +27,15 @@ public abstract class Weapon : MonoBehaviour
     [SerializeField] private Animator reloadAnimator;
     private Coroutine reloadCoroutine = null;
 
+    private AudioSource audioSource;
+    [SerializeField] private AudioClip attackClip;
+    [SerializeField] private AudioClip noAmmoClip;
+    
+
     private void Start()
     {
         curAmmo = maxAmmo;
+        audioSource = GetComponent<AudioSource>();
     }
 
     private void OnEnable()
@@ -61,14 +67,17 @@ public abstract class Weapon : MonoBehaviour
 
     public void Attack()
     {
-        Debug.Log(curAmmo);
-        Debug.Log(reloadCoroutine);
 
         if (reloadCoroutine != null) return;
 
         if (Time.time < nextAttackTime) return;
 
-        if (curAmmo == 0) return;
+        if (curAmmo == 0)
+        {
+            audioSource.PlayOneShot(noAmmoClip);
+            nextAttackTime = Time.time + attackCooldown;
+            return;
+        }
 
         SpecificAttackBehaviour();
 
@@ -76,6 +85,9 @@ public abstract class Weapon : MonoBehaviour
         if (maxAmmo != -1) curAmmo--;
 
         nextAttackTime = Time.time + attackCooldown;
+
+        audioSource.pitch = Random.Range(0.8f, 1.2f);
+        audioSource.PlayOneShot(attackClip);
     }
 
     public void Reload()
@@ -93,7 +105,6 @@ public abstract class Weapon : MonoBehaviour
 
     private IEnumerator ReloadCoroutine()
     {
-        Debug.Log("reload started");
 
         yield return new WaitForSeconds(reloadDuration);
 
@@ -101,7 +112,6 @@ public abstract class Weapon : MonoBehaviour
 
         reloadCoroutine = null;
 
-        Debug.Log("reload finished");
     }
 
     protected abstract void SpecificAttackBehaviour();
