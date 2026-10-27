@@ -51,9 +51,6 @@ public class GameManager : MonoBehaviour
         ActivatePhase(0);
         lastMilestone = gamePhaseArr[gamePhaseArr.Length - 2].nextPhaseMilestone;
 
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Confined;
-
     }
 
     private void ActivatePhase(int phaseIndex)

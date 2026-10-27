@@ -5,7 +5,7 @@ public class SpawnEnemiesOnDefeat : MonoBehaviour
     [SerializeField] GameObject enemyToSpawn;
     [SerializeField] int numOfEnemies;
 
-    private void OnDestroy()
+    public void Spawn()
     {
         for (int i = 0; i < numOfEnemies; i++)
         {

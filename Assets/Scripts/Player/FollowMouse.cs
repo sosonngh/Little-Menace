@@ -11,6 +11,16 @@ public class FollowMouse : MonoBehaviour
     // animaition purposes
     [SerializeField] PlayerSprite playerSprite;
 
+    [SerializeField] Texture2D cursorTexture;
+
+
+    private void Start()
+    {
+        // change the cursor texture and make it confined within screen
+        Cursor.SetCursor(cursorTexture, Vector2.zero, CursorMode.Auto);
+        Cursor.lockState = CursorLockMode.Confined;
+    }
+
     public void SetAimWiggleOffset(float degrees)
     {
         aimWiggleOffset = Random.Range(-degrees / 2, degrees / 2);
