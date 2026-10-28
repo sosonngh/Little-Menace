@@ -27,8 +27,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TMP_Text killScoreText;
     [SerializeField] private CameraShake cameraHolder;
     [SerializeField] private EnemySpawner enemySpawner;
-    [SerializeField] private Animator CenterNotification;
-    [SerializeField] private Transform HeartsContainer;
+    [SerializeField] private Animator centerNotification;
+    [SerializeField] private HeartsUI heartsContainer;
+    [SerializeField] private WeaponIconsHolder weaponIconsHolder;
     //
 
     [SerializeField] private GamePhase[] gamePhaseArr;
@@ -61,9 +62,12 @@ public class GameManager : MonoBehaviour
 
         enemySpawner.SetSpawnSettings(currentPhase.enemySpawnInterval, currentPhase.maxEnemiesPerSpawn, currentPhase.enemyArr);
 
+        // ui
+        weaponIconsHolder.SetWeaponLocked(currentPhase.latestWeaponUnlockedIndex, false);
+
         if (currentPhase.latestWeaponUnlockedIndex is > 0 and < 4)
         {
-            CenterNotification.Play("Flash");
+            centerNotification.Play("Flash");
         }
     }
 
@@ -72,12 +76,14 @@ public class GameManager : MonoBehaviour
         cameraHolder.Shake(duration, magnitude);
     }
 
-    public void UpdateHealthUI(int curHealth)
+    public void UpdateHealthUI(int health)
     {
-        for (int i = 0; i < HeartsContainer.childCount; i++)
-        {
-            HeartsContainer.GetChild(i).gameObject.SetActive(curHealth > i);
-        }
+        heartsContainer.UpdateHealthUI(health);
+    }
+
+    public void SetSelectedWeaponUI(int weaponIndex)
+    {
+        weaponIconsHolder.SetSelectedWeapon(weaponIndex);
     }
 
     public void IncrementKillCount()

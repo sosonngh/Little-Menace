@@ -101,6 +101,8 @@ public class Player : MonoBehaviour
         weapon.SetPlayer(this);
 
         weapon.gameObject.SetActive(true);
+
+        GameManager.Instance.SetSelectedWeaponUI(weaponIndex);
     }
 
     // INPUT METHODS
