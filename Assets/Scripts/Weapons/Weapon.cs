@@ -30,6 +30,8 @@ public abstract class Weapon : MonoBehaviour
     private AudioSource audioSource;
     [SerializeField] private AudioClip attackClip;
     [SerializeField] private AudioClip noAmmoClip;
+
+    [SerializeField] private float damage;
     
 
     private void Start()
@@ -56,13 +58,22 @@ public abstract class Weapon : MonoBehaviour
         this.player = player;
     }
 
-    protected void KillIfEnemy(Collider2D collider)
+    protected void DealDamageIfEnemy(Collider2D collider)
     {
-        if (collider.CompareTag("Enemy"))
+        // deal damage to boss
+        if (collider.TryGetComponent<EnemyBoss>(out var enemyBoss))
         {
-            collider.gameObject.GetComponent<Enemy>().DieByWeapon(weaponType);
+            enemyBoss.TakeDamage(damage, weaponType);
+            return;
+        }
+
+        // kill other enemies
+        if (collider.TryGetComponent<Enemy>(out var enemy))
+        {
+            enemy.DieByWeapon(weaponType);
             GameManager.Instance.IncrementKillCount();
         }
+        
     }
 
     public void Attack()

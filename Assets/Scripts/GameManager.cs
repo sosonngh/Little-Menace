@@ -12,6 +12,8 @@ public class GamePhase
     public int maxEnemiesPerSpawn; // will spawn from 1 to {this number} enemies
     public GameObject[] enemyArr;
     public int nextPhaseMilestone; // -1 a phase is infinite
+    public bool isBoss;
+    public bool isNewWeaponUnlocked;
 }
 
 public class GameManager : MonoBehaviour
@@ -30,6 +32,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Animator centerNotification;
     [SerializeField] private HeartsUI heartsContainer;
     [SerializeField] private WeaponIconsHolder weaponIconsHolder;
+    [SerializeField] private BossHealthBar bossHealthBar;
     //
 
     [SerializeField] private GamePhase[] gamePhaseArr;
@@ -65,15 +68,37 @@ public class GameManager : MonoBehaviour
         // ui
         weaponIconsHolder.SetWeaponLocked(currentPhase.latestWeaponUnlockedIndex, false);
 
-        if (currentPhase.latestWeaponUnlockedIndex is > 0 and < 4)
+        if (currentPhase.isNewWeaponUnlocked)
         {
             centerNotification.Play("Flash");
+        }
+
+        // boss
+        if (currentPhase.isBoss)
+        {
+            enemySpawner.SpawnBoss();
+
+            killScoreText.enabled = false;
+            bossHealthBar.GetComponent<Animator>().Play("BossHealthBarIn");
         }
     }
 
     public void ShakeCamera(float duration, float magnitude)
     {
         cameraHolder.Shake(duration, magnitude);
+    }
+
+    public void UpdateBossHealth(float curHealth, float maxHealth)
+    {
+        bossHealthBar.SetHealth(curHealth, maxHealth);
+
+        if (curHealth <= 0)
+        {
+            bossHealthBar.GetComponent<Animator>().Play("BossHealthBarOut");
+            ActivatePhase(Array.IndexOf(gamePhaseArr, currentPhase) + 1);
+            killScoreText.enabled = true;
+            UpdateKillScoreText(); // ugh
+        }
     }
 
     public void UpdateHealthUI(int health)
@@ -86,8 +111,21 @@ public class GameManager : MonoBehaviour
         weaponIconsHolder.SetSelectedWeapon(weaponIndex);
     }
 
+    private void UpdateKillScoreText()
+    {
+        if (currentPhase.nextPhaseMilestone == -1)
+        {
+            killScoreText.text = $"{killCount}";
+            return;
+        }
+
+        killScoreText.text = $"{killCount} / {currentPhase.nextPhaseMilestone}";
+    }
+
     public void IncrementKillCount()
     {
+        if (currentPhase.isBoss) return;
+
         killCount++;
 
         UpdateKillScoreText();
@@ -105,18 +143,6 @@ public class GameManager : MonoBehaviour
         }
 
     }
-
-    private void UpdateKillScoreText()
-    {
-        if (currentPhase.nextPhaseMilestone == -1)
-        {
-            killScoreText.text = $"{killCount}";
-            return;
-        }
-
-        killScoreText.text = $"{killCount} / {currentPhase.nextPhaseMilestone}";
-    }
-
 
     public void GameOver()
     {

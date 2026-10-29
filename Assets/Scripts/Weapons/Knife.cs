@@ -11,7 +11,7 @@ public class Knife : Weapon
 
         foreach (Collider2D hit in hits)
         {
-            KillIfEnemy(hit);
+            DealDamageIfEnemy(hit);
         }
 
         // anim

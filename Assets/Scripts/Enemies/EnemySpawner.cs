@@ -8,6 +8,7 @@ public class EnemySpawner : MonoBehaviour
     private int additionalEnemiesPerSpawn;
 
     [SerializeField] private float spawnRadius;
+    [SerializeField] private GameObject bossPrefab;
 
 
     private float timeElapsed;
@@ -23,6 +24,12 @@ public class EnemySpawner : MonoBehaviour
             Instantiate(enemy, spawnPoint, Quaternion.identity);
         }
 
+    }
+
+    public void SpawnBoss()
+    {
+        Vector2 spawnPoint = (Vector2)transform.position + Random.insideUnitCircle.normalized * spawnRadius;
+        Instantiate(bossPrefab, spawnPoint, Quaternion.identity);
     }
 
     public void SetSpawnSettings(float spawnInterval, int maxEnemiesPerSpawn, GameObject[] enemyArr)

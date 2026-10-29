@@ -1,6 +1,4 @@
 using UnityEngine;
-using UnityEngine.Audio;
-using UnityEngine.U2D;
 
 public class Enemy : MonoBehaviour
 {
@@ -11,13 +9,13 @@ public class Enemy : MonoBehaviour
     [SerializeField] private ParticleSystem deathBloodFx;
     [SerializeField] private ParticleSystem deathSubBloodFx;
 
-    [SerializeField] private SpriteAnim sprite;
+    [SerializeField] private SpriteAnim spriteChild;
 
     private Rigidbody2D rb;
     private AudioSource audioSource;
 
 
-    private void Awake()
+    protected virtual void Awake()
     {
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
         rb = GetComponent<Rigidbody2D>();
@@ -47,7 +45,6 @@ public class Enemy : MonoBehaviour
 
         Destroy(gameObject);
 
-
     }
 
     private void FixedUpdate()
@@ -56,8 +53,8 @@ public class Enemy : MonoBehaviour
 
         rb.linearVelocity = speed * moveDirection;
 
-        sprite.SetIsMoving(moveDirection.magnitude > 0);
-        sprite.SetFlip(moveDirection.x > 0);
+        spriteChild.SetIsMoving(moveDirection.magnitude > 0);
+        spriteChild.SetFlip(moveDirection.x > 0);
     }
 
 

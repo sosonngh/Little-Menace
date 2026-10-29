@@ -5,10 +5,6 @@ public class Player : MonoBehaviour
 {
     [SerializeField] private float speed;
     [SerializeField] private int health;
-    [SerializeField] private float almightyPushRadius;
-
-    [SerializeField] private float almightyPushDuration;
-    [SerializeField] private float almightyPushShakeMagnitude;
 
     [SerializeField] private float linearRecoilRecoveryForce;
 
@@ -27,7 +23,9 @@ public class Player : MonoBehaviour
     private Vector2 recoilVelocity;
 
     private AudioSource audioSource;
-    [SerializeField] private AudioClip almightyPushClip;
+
+    // almighty pushhsh
+    [SerializeField] private AlmightyPush almightyPush;
 
     private void Start()
     {
@@ -62,22 +60,9 @@ public class Player : MonoBehaviour
 
     private void ActivateAlmightyPush()
     {
-        audioSource.PlayOneShot(almightyPushClip);
-
-        // i hate it but i think trying to use weapon kill feature would be too much effort
-        Collider2D[] hits = Physics2D.OverlapCircleAll(transform.position, almightyPushRadius);
-
-        foreach (Collider2D hit in hits)
-        {
-            if (!hit.CompareTag("Enemy")) continue;
-
-            hit.GetComponent<Enemy>().DieByWeapon(WeaponType.AlmightyPush);
-            GameManager.Instance.IncrementKillCount();
-        }
-
-        GameManager.Instance.ShakeCamera(almightyPushDuration, almightyPushShakeMagnitude);
+        almightyPush.Attack();
         // anim
-        sprite.Cry(almightyPushDuration + 0.5f);
+        sprite.Cry(almightyPush.shakeDuration + 0.5f);
     }
 
     private void Die()

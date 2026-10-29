@@ -19,7 +19,7 @@ public class RiffleLike : Weapon
 
         RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.right, attackRange);
 
-        if (hit) KillIfEnemy(hit.collider);
+        if (hit) DealDamageIfEnemy(hit.collider);
 
         //recoil knockback
         player.ApplyLinearRecoil(-transform.right, recoilForce);

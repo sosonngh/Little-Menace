@@ -179,7 +179,7 @@ MonoBehaviour:
   gunshotBloodFx: {fileID: 5368804909693379928, guid: b4801f655456c09499c85b599124d553, type: 3}
   deathBloodFx: {fileID: 6182860136652019465, guid: 07b1f955f0d6d734cae37b3b1afe1ff1, type: 3}
   deathSubBloodFx: {fileID: 237296227611171537, guid: 96133fc6335db9b438b01d8be57a1088, type: 3}
-  sprite: {fileID: 1768926759067217535}
+  spriteChild: {fileID: 1768926759067217535}
 --- !u!58 &-6131323309098246494
 CircleCollider2D:
   m_ObjectHideFlags: 0

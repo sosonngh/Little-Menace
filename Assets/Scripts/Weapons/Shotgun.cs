@@ -19,7 +19,7 @@ public class Shotgun : Weapon
 
             foreach(RaycastHit2D hit in hits)
             {
-                if (hit) KillIfEnemy(hit.collider);
+                if (hit) DealDamageIfEnemy(hit.collider);
             }
 
         }
