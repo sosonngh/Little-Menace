@@ -38,8 +38,8 @@ public class FollowMouse : MonoBehaviour
         Vector2 lookDirection = mousePos - transform.position;
 
         lookAngle = Mathf.Atan2(lookDirection.y, lookDirection.x) * Mathf.Rad2Deg;
-
-        transform.rotation = Quaternion.Euler(0, 0, lookAngle + aimWiggleOffset);
+        Quaternion directionWithOffset = Quaternion.Euler(0, 0, lookAngle + aimWiggleOffset);
+        transform.rotation = directionWithOffset;
 
         // animation
         playerSprite.SetFlip(lookDirection.x < 0);
@@ -47,6 +47,7 @@ public class FollowMouse : MonoBehaviour
         // find the active weapon and flip
         WeaponSprite sprite = transform.GetComponentInChildren<WeaponSprite>();
         sprite.SetFlip(lookDirection.x < 0);
+        sprite.SetDirection(directionWithOffset);
        
     }
 }

@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -22,20 +23,17 @@ public class Player : MonoBehaviour
 
     private Vector2 recoilVelocity;
 
-    private AudioSource audioSource;
-
     // almighty pushhsh
     [SerializeField] private AlmightyPush almightyPush;
 
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
+
         weapon = weaponHolder.GetChild(0).GetComponent<Weapon>();
         weapon.SetPlayer(this);
 
         IsActive = true;
-
-        audioSource = GetComponent<AudioSource>();
     }
 
     // getting hit

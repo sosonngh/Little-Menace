@@ -3,12 +3,13 @@ using UnityEngine;
 public class WeaponSprite : MonoBehaviour
 {
     protected SpriteRenderer sr;
-    protected Animator animator;
+    private Quaternion direction;
+
+    [SerializeField] GameObject muzzleFlash;
 
     private void Awake()
     {
         sr = GetComponent<SpriteRenderer>();
-        animator = GetComponent<Animator>();
     }
 
     public void SetFlip(bool state)
@@ -16,8 +17,14 @@ public class WeaponSprite : MonoBehaviour
         sr.flipY = state;
     }
 
-    public virtual void Attack()
+    public void SetDirection(Quaternion direction)
     {
-        animator.Play("Attack");
+        this.direction = direction;
+    }
+    
+    public virtual void AttackAnimation()
+    {
+        // im crine
+        Instantiate(muzzleFlash, (Vector2)transform.position + new Vector2(0.4f, 0), direction);
     }
 }

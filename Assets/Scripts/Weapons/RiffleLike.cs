@@ -9,13 +9,11 @@ public class RiffleLike : Weapon
 
     [SerializeField] private FollowMouse weaponHolder;
 
-    [SerializeField] private Animator muzzleFlashAnim;
-
     private Coroutine aimWiggleCoroutine = null;
+
 
     protected override void SpecificAttackBehaviour()
     {
-        Debug.Log("Attack from riffle like");
 
         RaycastHit2D hit = Physics2D.Raycast(transform.position, transform.right, attackRange);
 
@@ -34,8 +32,6 @@ public class RiffleLike : Weapon
 
             aimWiggleCoroutine = StartCoroutine(EnableAimWiggle());
         }
-
-        muzzleFlashAnim.Play("MuzzleFlash");
     }
 
     private void OnDrawGizmos()

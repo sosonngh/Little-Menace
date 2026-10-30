@@ -8,10 +8,11 @@ public class Shotgun : Weapon
     [SerializeField] private float angularRecoilForce;
 
     [SerializeField] private FollowMouse weaponHolder;
-    [SerializeField] private Animator muzzleFlashAnimator;
+
 
     protected override void SpecificAttackBehaviour()
     {
+
         for (int i = 0; i < bulletsPerShot; i++)
         {
             Vector2 direction = Quaternion.Euler(0, 0, Random.Range(-spreadAreaDeg / 2, spreadAreaDeg / 2)) * transform.right;
@@ -30,9 +31,12 @@ public class Shotgun : Weapon
         player.ApplyAngularRecoil(angularRecoilForce);
 
         GameManager.Instance.ShakeCamera(0.3f, 0.3f);
+    }
 
-        // anim
-        muzzleFlashAnimator.Play("ShotgunMuzzleFlash");
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawLine(transform.position, transform.position + transform.right * attackRange);
     }
 
 }

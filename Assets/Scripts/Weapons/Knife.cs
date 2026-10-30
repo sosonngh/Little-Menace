@@ -3,7 +3,6 @@ using UnityEngine;
 public class Knife : Weapon
 {
     [SerializeField] private float attackRadius;
-    [SerializeField] private WeaponSprite sprite;
 
     protected override void SpecificAttackBehaviour()
     {
@@ -14,8 +13,6 @@ public class Knife : Weapon
             DealDamageIfEnemy(hit);
         }
 
-        // anim
-        sprite.Attack();
     }
 
     private void OnDrawGizmosSelected()

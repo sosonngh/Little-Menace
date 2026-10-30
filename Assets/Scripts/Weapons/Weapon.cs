@@ -32,9 +32,11 @@ public abstract class Weapon : MonoBehaviour
     [SerializeField] private AudioClip noAmmoClip;
 
     [SerializeField] private float damage;
-    
 
-    private void Start()
+    [SerializeField] private WeaponSprite sprite;
+
+
+    private void Awake()
     {
         curAmmo = maxAmmo;
         audioSource = GetComponent<AudioSource>();
@@ -49,8 +51,7 @@ public abstract class Weapon : MonoBehaviour
             reloadCoroutine = null;
         }
 
-
-        reloadAnimator.Play("Idle");
+        reloadAnimator.Play("Idle", 0, 0f);
     }
 
     public void SetPlayer(Player player)
@@ -99,6 +100,12 @@ public abstract class Weapon : MonoBehaviour
 
         audioSource.pitch = Random.Range(0.8f, 1.2f);
         audioSource.PlayOneShot(attackClip);
+
+        if (weaponType != WeaponType.AlmightyPush)
+        {
+            sprite.AttackAnimation();
+        }
+        
     }
 
     public void Reload()
