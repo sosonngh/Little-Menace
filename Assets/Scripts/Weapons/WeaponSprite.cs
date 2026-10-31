@@ -3,28 +3,31 @@ using UnityEngine;
 public class WeaponSprite : MonoBehaviour
 {
     protected SpriteRenderer sr;
-    private Quaternion direction;
+    private FollowMouse mouseScript;
 
-    [SerializeField] GameObject muzzleFlash;
+    [SerializeField] private GameObject muzzleFlash;
+    [SerializeField] private float muzzleSpawnOffsetX;
 
     private void Awake()
     {
         sr = GetComponent<SpriteRenderer>();
     }
 
-    public void SetFlip(bool state)
+    private void Start()
     {
-        sr.flipY = state;
-    }
-
-    public void SetDirection(Quaternion direction)
-    {
-        this.direction = direction;
+        mouseScript = transform.GetComponentInParent<FollowMouse>();
     }
     
     public virtual void AttackAnimation()
     {
+        Vector2 spawnPos = (Vector2)transform.position + (Vector2)transform.right * muzzleSpawnOffsetX;
+
         // im crine
-        Instantiate(muzzleFlash, (Vector2)transform.position + new Vector2(0.4f, 0), direction);
+        Instantiate(muzzleFlash, spawnPos, mouseScript.RotationWithOffset);
+    }
+
+    private void Update()
+    {
+        sr.flipY = (mouseScript.LookVector.x < 0);
     }
 }

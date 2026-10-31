@@ -180,7 +180,7 @@ MonoBehaviour:
   deathBloodFx: {fileID: 2598732997639756159, guid: 39e00c4ac285a9a4498ff0201ec00d86, type: 3}
   deathSubBloodFx: {fileID: 7375417316387092262, guid: c4ffa03cd6116a9449e53d7b1a7a1423, type: 3}
   spriteChild: {fileID: 7375402658293370176}
-  maxHealth: 100
+  maxHealth: 200
 --- !u!58 &4635218912128977979
 CircleCollider2D:
   m_ObjectHideFlags: 0

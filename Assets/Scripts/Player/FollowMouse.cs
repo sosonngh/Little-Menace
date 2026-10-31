@@ -13,6 +13,9 @@ public class FollowMouse : MonoBehaviour
 
     [SerializeField] Texture2D cursorTexture;
 
+    public Quaternion RotationWithOffset { get; private set; }
+    public Vector2 LookVector { get; private set; }
+
 
     private void Start()
     {
@@ -35,19 +38,14 @@ public class FollowMouse : MonoBehaviour
 
         Vector3 mousePos = Camera.main.ScreenToWorldPoint(Mouse.current.position.ReadValue());
 
-        Vector2 lookDirection = mousePos - transform.position;
+        LookVector = mousePos - transform.position;
 
-        lookAngle = Mathf.Atan2(lookDirection.y, lookDirection.x) * Mathf.Rad2Deg;
-        Quaternion directionWithOffset = Quaternion.Euler(0, 0, lookAngle + aimWiggleOffset);
-        transform.rotation = directionWithOffset;
+        lookAngle = Mathf.Atan2(LookVector.y, LookVector.x) * Mathf.Rad2Deg;
+        RotationWithOffset = Quaternion.Euler(0, 0, lookAngle + aimWiggleOffset);
+        transform.rotation = RotationWithOffset;
 
         // animation
-        playerSprite.SetFlip(lookDirection.x < 0);
-
-        // find the active weapon and flip
-        WeaponSprite sprite = transform.GetComponentInChildren<WeaponSprite>();
-        sprite.SetFlip(lookDirection.x < 0);
-        sprite.SetDirection(directionWithOffset);
+        playerSprite.SetFlip(LookVector.x < 0);
        
     }
 }
