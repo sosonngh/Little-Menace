@@ -7,10 +7,15 @@ public class SpriteAnim : MonoBehaviour
 
     private bool isMoving;
 
-    private void Start()
+    private void Awake()
     {
         sr = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
+    }
+
+    public void SetSrEnabled(bool state)
+    {
+        sr.enabled = state;
     }
 
     public void SetFlip(bool state)

@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 [System.Serializable]
 public class GamePhase
@@ -23,7 +22,7 @@ public class GameManager : MonoBehaviour
     private int killCount;
     // infinite mode
     [SerializeField] int killsPerAddEnemy;
-    private int lastMilestone;
+    [SerializeField] private int lastMilestone;
 
     // scene objects
     [SerializeField] private TMP_Text killScoreText;
@@ -33,6 +32,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private HeartsUI heartsContainer;
     [SerializeField] private WeaponIconsHolder weaponIconsHolder;
     [SerializeField] private BossHealthBar bossHealthBar;
+    [SerializeField] private GameObject canvas;
+    [SerializeField] private AudioSource backgroundMusic;
     //
 
     [SerializeField] private GamePhase[] gamePhaseArr;
@@ -41,8 +42,11 @@ public class GameManager : MonoBehaviour
 
     // audio
     private AudioSource audioSource;
-    [SerializeField] private AudioClip gameOverClip;
     [SerializeField] private AudioClip newPhaseReached;
+
+    // game over sequence
+    [SerializeField] Player player;
+    [SerializeField] FollowPlayer[] followPlayerObjects;
 
     private void Awake()
     {
@@ -52,9 +56,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        ActivatePhase(0);
-        lastMilestone = gamePhaseArr[gamePhaseArr.Length - 2].nextPhaseMilestone;
-
+        StartCoroutine(NewGame());
     }
 
     private void ActivatePhase(int phaseIndex)
@@ -144,20 +146,48 @@ public class GameManager : MonoBehaviour
 
     }
 
-    public void GameOver()
+    public IEnumerator NewGame()
     {
-        StartCoroutine(GameOverCoroutine());
-    }
+        // disable everything
+        backgroundMusic.volume = 0.05f;
 
-    private IEnumerator GameOverCoroutine()
-    {
-        audioSource.PlayOneShot(gameOverClip);
+        enemySpawner.SetIsSpawning(false);
+        canvas.SetActive(false);
+        foreach (FollowPlayer obj in followPlayerObjects) //ugh
+        {
+            obj.SetIsFollowing(false);
+        }
+        // (reset phase)
+        currentPhase = gamePhaseArr[0];
 
-        cameraHolder.Shake(3f, 2f);
+        // kill all enemies
+        foreach (GameObject enemy in GameObject.FindGameObjectsWithTag("Enemy"))
+        {
+            enemy.GetComponent<Enemy>().DieByWeapon(WeaponType.AlmightyPush);
+        }
 
-        yield return new WaitForSeconds(5f);
+        // respawn player
+        yield return StartCoroutine(player.Respawn());
 
-        SceneManager.LoadScene(0);
+        // enable everything back and reset values;
+        backgroundMusic.volume = 0.1f;
+
+        canvas.SetActive(true);
+        ActivatePhase(0);
+
+        killCount = 0;
+        UpdateKillScoreText();
+
+        weaponIconsHolder.SetWeaponLocked(1, true);
+        weaponIconsHolder.SetWeaponLocked(2, true);
+        weaponIconsHolder.SetWeaponLocked(3, true);
+
+        foreach (FollowPlayer obj in followPlayerObjects) //ugh
+        {
+            obj.SetIsFollowing(true);
+        }
+        enemySpawner.SetIsSpawning(true);
+        
     }
 
 }

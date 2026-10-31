@@ -2,12 +2,7 @@ using UnityEngine;
 
 public class WeaponIconsHolder : MonoBehaviour
 {
-    private WeaponIconUI[] weaponIcons;
-
-    private void Awake()
-    {
-        weaponIcons = GetComponentsInChildren<WeaponIconUI>();
-    }
+    [SerializeField] private WeaponIconUI[] weaponIcons;
 
     public void SetSelectedWeapon(int weaponIndex)
     {

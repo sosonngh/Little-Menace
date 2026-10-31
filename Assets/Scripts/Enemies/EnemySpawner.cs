@@ -7,11 +7,18 @@ public class EnemySpawner : MonoBehaviour
     private GameObject[] enemyArr;
     private int additionalEnemiesPerSpawn;
 
+    private bool isSpawning;
+
     [SerializeField] private float spawnRadius;
     [SerializeField] private GameObject bossPrefab;
 
 
     private float timeElapsed;
+
+    public void SetIsSpawning(bool state)
+    {
+        isSpawning = state;
+    }
 
     private void Spawn()
     {
@@ -49,6 +56,8 @@ public class EnemySpawner : MonoBehaviour
 
     private void Update()
     {
+        if (!isSpawning) return;
+
         if (timeElapsed >= spawnInterval)
         {
             Spawn();

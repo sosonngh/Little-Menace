@@ -38,7 +38,8 @@ public class Enemy : MonoBehaviour
         audioSource.pitch = Random.Range(0.8f, 1.2f);
         AudioSource.PlayClipAtPoint(audioSource.clip, transform.position, 1.75f);
 
-        if (TryGetComponent<SpawnEnemiesOnDefeat>(out var spawner))
+        // enemies died by almighty push don't spawn new ones
+        if (TryGetComponent<SpawnEnemiesOnDefeat>(out var spawner) && weaponType != WeaponType.AlmightyPush)
         {
             spawner.Spawn();
         }

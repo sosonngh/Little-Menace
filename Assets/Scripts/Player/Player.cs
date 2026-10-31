@@ -1,11 +1,13 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
     [SerializeField] private float speed;
-    [SerializeField] private int health;
+    [SerializeField] private int maxHealth;
+    private int curHealth;
 
     [SerializeField] private float linearRecoilRecoveryForce;
 
@@ -23,17 +25,18 @@ public class Player : MonoBehaviour
 
     private Vector2 recoilVelocity;
 
+    private AudioSource audioSource;
+    [SerializeField] AudioClip gameOverClip;
+
+    [SerializeField] KnifeProp knifePropPrefab;
+
     // almighty pushhsh
     [SerializeField] private AlmightyPush almightyPush;
 
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-
-        weapon = weaponHolder.GetChild(0).GetComponent<Weapon>();
-        weapon.SetPlayer(this);
-
-        IsActive = true;
+        audioSource = GetComponent<AudioSource>();
     }
 
     // getting hit
@@ -43,13 +46,13 @@ public class Player : MonoBehaviour
 
         if (!collision.CompareTag("Enemy")) return;
 
-        health--;
+        curHealth--;
 
-        GameManager.Instance.UpdateHealthUI(health);
+        GameManager.Instance.UpdateHealthUI(curHealth);
 
-        if (health <= 0)
+        if (curHealth <= 0)
         {
-            Die();
+            StartCoroutine(Die());
             return;
         }
 
@@ -63,14 +66,6 @@ public class Player : MonoBehaviour
         sprite.Cry(almightyPush.shakeDuration + 0.5f);
     }
 
-    private void Die()
-    {
-        GameManager.Instance.GameOver();
-
-        sprite.Cry(10f);
-        IsActive = false;
-    }
-
     private void SwitchWeapon(int weaponIndex)
     {
         if (!IsActive) return;
@@ -78,14 +73,21 @@ public class Player : MonoBehaviour
         // check if the weapon is unlocked
         if (GameManager.Instance.currentPhase.latestWeaponUnlockedIndex < weaponIndex) return;
 
-        weapon.gameObject.SetActive(false);
+        DeselectWeapon();
 
         weapon = weaponHolder.GetChild(weaponIndex).GetComponent<Weapon>();
         weapon.SetPlayer(this);
-
         weapon.gameObject.SetActive(true);
 
         GameManager.Instance.SetSelectedWeaponUI(weaponIndex);
+    }
+
+    private void DeselectWeapon()
+    {
+        if (weapon != null)
+        {
+            weapon.gameObject.SetActive(false);
+        }
     }
 
     // INPUT METHODS
@@ -144,8 +146,66 @@ public class Player : MonoBehaviour
         rb.AddTorque(force);
     }
 
+    // game over sequence methods
+    private IEnumerator Die()
+    {
+        yield return StartCoroutine(Explode());
+
+        StartCoroutine(GameManager.Instance.NewGame());
+    }
+
+    private IEnumerator Explode()
+    {
+        rb.linearVelocity = Vector2.zero;
+        sprite.SetIsMoving(false);
+
+        audioSource.PlayOneShot(gameOverClip);
+        IsActive = false;
+
+        yield return new WaitForSeconds(3f); // ANIMATION HERE
+
+        sprite.SetSrEnabled(false);
+
+        Instantiate(knifePropPrefab, transform.position, Quaternion.identity);
+    }
+
+    public IEnumerator Respawn()
+    {
+        DeselectWeapon();
+
+        Vector3 initialPos = transform.position;
+        transform.position = transform.position + 15 * Vector3.left;
+
+        yield return new WaitForSeconds(2f);
+
+        sprite.SetSrEnabled(true);
+        sprite.SetIsMoving(true);
+
+        while (transform.position != initialPos)
+        {
+            transform.position = Vector3.MoveTowards(
+                transform.position, 
+                initialPos, 
+                speed * Time.deltaTime);
+
+            yield return null;
+        }
+
+        sprite.SetIsMoving(false);
+
+        yield return new WaitForSeconds(2f);
+
+        IsActive = true;
+        SwitchWeapon(0);
+        curHealth = maxHealth;
+        GameManager.Instance.UpdateHealthUI(curHealth);
+
+    }
+
     private void FixedUpdate()
-    { 
+    {
+        if (!IsActive) return;
+
         if (IsSpinning)
         {
             rb.linearVelocity = recoilVelocity;
