@@ -23,7 +23,7 @@ public class WeaponSprite : MonoBehaviour
         Vector2 spawnPos = (Vector2)transform.position + (Vector2)transform.right * muzzleSpawnOffsetX;
 
         // im crine
-        Instantiate(muzzleFlash, spawnPos, mouseScript.RotationWithOffset);
+        Instantiate(muzzleFlash, spawnPos, transform.rotation);
     }
 
     private void Update()

@@ -6,8 +6,14 @@ public class WeaponIconUI : MonoBehaviour
     [SerializeField] private Sprite inactive;
     [SerializeField] private Sprite active;
 
-    [SerializeField] private Image image;
-    [SerializeField] private Image iconLock;
+    private Image image;
+    private Image iconLock;
+
+    private void Awake()
+    {
+        image = GetComponent<Image>();
+        iconLock = transform.GetChild(0).GetComponent<Image>();
+    }
 
     public void SetSelected(bool state)
     {

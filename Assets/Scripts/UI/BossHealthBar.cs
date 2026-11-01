@@ -6,13 +6,40 @@ public class BossHealthBar : MonoBehaviour
     [SerializeField] private RectTransform trailingBar;
     [SerializeField] private float catchUpSpeed;
 
+    private Vector2 initialPos;
+    private RectTransform rectTransform;
+
     private Vector2 initialSize;
     private float targetWidth;
 
-    private void Start()
+    private Animator animator;
+
+    private void Awake()
     {
         initialSize = healthBar.rect.size;
         targetWidth = initialSize.x;
+
+        rectTransform = GetComponent<RectTransform>();
+        animator = GetComponent<Animator>();
+
+        initialPos = rectTransform.anchoredPosition;
+    }
+
+    public void PlayAnimationIn()
+    {
+        animator.Play("BossHealthBarIn");
+    }
+
+    public void PlayAnimationOut()
+    {
+        animator.Play("BossHealthBarOut");
+    }
+
+    public void ResetToDefault()
+    {
+        animator.Play("Idle");
+        SetHealth(1, 1);
+        rectTransform.anchoredPosition = initialPos;
     }
 
     public void SetHealth(float curHealth, float maxHealth)

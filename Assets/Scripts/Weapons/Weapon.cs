@@ -35,10 +35,9 @@ public abstract class Weapon : MonoBehaviour
 
     [SerializeField] private WeaponSprite sprite;
 
-
     private void Awake()
     {
-        curAmmo = maxAmmo;
+        ResetAmmo();
         audioSource = GetComponent<AudioSource>();
     }
 
@@ -108,8 +107,20 @@ public abstract class Weapon : MonoBehaviour
         
     }
 
+    public void ResetAmmo()
+    {
+        if (reloadCoroutine != null)
+        {
+            StopCoroutine(reloadCoroutine);
+            reloadCoroutine = null;
+        }
+
+        curAmmo = maxAmmo;
+    }
+
     public void Reload()
     {
+
         if (maxAmmo == -1) return;
 
         if (reloadCoroutine != null) return;
@@ -133,4 +144,5 @@ public abstract class Weapon : MonoBehaviour
     }
 
     protected abstract void SpecificAttackBehaviour();
+
 }

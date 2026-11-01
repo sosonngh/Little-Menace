@@ -20,8 +20,9 @@ public class Player : MonoBehaviour
     [SerializeField] PlayerSprite sprite;
 
     [SerializeField] private Transform weaponHolder;
-    private Weapon weapon;
+    private Weapon curWeapon;
     private bool isAttacking;
+    private int selectedWeaponIndex;
 
     private Vector2 recoilVelocity;
 
@@ -33,7 +34,7 @@ public class Player : MonoBehaviour
     // almighty pushhsh
     [SerializeField] private AlmightyPush almightyPush;
 
-    private void Start()
+    private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         audioSource = GetComponent<AudioSource>();
@@ -75,18 +76,20 @@ public class Player : MonoBehaviour
 
         DeselectWeapon();
 
-        weapon = weaponHolder.GetChild(weaponIndex).GetComponent<Weapon>();
-        weapon.SetPlayer(this);
-        weapon.gameObject.SetActive(true);
+        curWeapon = weaponHolder.GetChild(weaponIndex).GetComponent<Weapon>();
+        curWeapon.SetPlayer(this);
+        curWeapon.gameObject.SetActive(true);
 
         GameManager.Instance.SetSelectedWeaponUI(weaponIndex);
+
+        selectedWeaponIndex = weaponIndex;
     }
 
     private void DeselectWeapon()
     {
-        if (weapon != null)
+        if (curWeapon != null)
         {
-            weapon.gameObject.SetActive(false);
+            curWeapon.gameObject.SetActive(false);
         }
     }
 
@@ -114,7 +117,7 @@ public class Player : MonoBehaviour
     {
         if (!IsActive) return;
 
-        weapon.Reload();
+        curWeapon.Reload();
     }
 
     public void OnSwitchWeapon(InputAction.CallbackContext context)
@@ -129,6 +132,27 @@ public class Player : MonoBehaviour
             case "4": SwitchWeapon(3); break;
             default: break;
         }
+    }
+
+    public void OnMouseScroll(InputAction.CallbackContext context)
+    {
+        if (!IsActive) return;
+
+        float direction = context.ReadValue<Vector2>().y;
+        if (direction > 0)
+        {
+            selectedWeaponIndex--;
+        }
+        else if (direction < 0)
+        {
+            selectedWeaponIndex++;
+        }
+
+        // find weapon index based on initial value and number of weapons unlocked
+        int weaponsUnlockedNum = GameManager.Instance.currentPhase.latestWeaponUnlockedIndex + 1;        
+        selectedWeaponIndex = (selectedWeaponIndex % weaponsUnlockedNum + weaponsUnlockedNum) % weaponsUnlockedNum;
+
+        SwitchWeapon(selectedWeaponIndex);
     }
     //
 
@@ -172,11 +196,21 @@ public class Player : MonoBehaviour
     public IEnumerator Respawn()
     {
         DeselectWeapon();
+        IsSpinning = false;
+        isAttacking = false;
+        rb.angularVelocity = 0f;
+        recoilVelocity = Vector2.zero;
+        transform.rotation = Quaternion.Euler(0, 0, 0);
+
+        foreach (Weapon weapon in weaponHolder.GetComponentsInChildren<Weapon>(true))
+        {
+            weapon.ResetAmmo();
+        }
 
         Vector3 initialPos = transform.position;
         transform.position = transform.position + 15 * Vector3.left;
 
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1f);
 
         sprite.SetSrEnabled(true);
         sprite.SetIsMoving(true);
@@ -243,7 +277,7 @@ public class Player : MonoBehaviour
     {
         if (!IsActive) return;
 
-        if (isAttacking) weapon.Attack();
+        if (isAttacking) curWeapon.Attack();
 
     }
 

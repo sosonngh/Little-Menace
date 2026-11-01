@@ -13,7 +13,6 @@ public class FollowMouse : MonoBehaviour
 
     [SerializeField] Texture2D cursorTexture;
 
-    public Quaternion RotationWithOffset { get; private set; }
     public Vector2 LookVector { get; private set; }
 
 
@@ -41,8 +40,8 @@ public class FollowMouse : MonoBehaviour
         LookVector = mousePos - transform.position;
 
         lookAngle = Mathf.Atan2(LookVector.y, LookVector.x) * Mathf.Rad2Deg;
-        RotationWithOffset = Quaternion.Euler(0, 0, lookAngle + aimWiggleOffset);
-        transform.rotation = RotationWithOffset;
+        Quaternion rotationWithOffset = Quaternion.Euler(0, 0, lookAngle + aimWiggleOffset);
+        transform.rotation = rotationWithOffset;
 
         // animation
         playerSprite.SetFlip(LookVector.x < 0);

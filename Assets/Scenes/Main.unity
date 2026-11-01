@@ -524,7 +524,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 350f1efad3f34464db93e692eff4d1a7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
-  killsPerAddEnemy: 100
+  killsPerAddEnemy: 50
   lastMilestone: 200
   killScoreText: {fileID: 357456603}
   cameraHolder: {fileID: 791673788}
@@ -533,7 +533,7 @@ MonoBehaviour:
   heartsContainer: {fileID: 535929439}
   weaponIconsHolder: {fileID: 307128152}
   bossHealthBar: {fileID: 1813650685}
-  canvas: {fileID: 1738256058}
+  canvas: {fileID: 1738256061}
   backgroundMusic: {fileID: 779618221}
   gamePhaseArr:
   - latestWeaponUnlockedIndex: 0
@@ -789,7 +789,7 @@ RectTransform:
   m_GameObject: {fileID: 307128150}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 1}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 530554582}
@@ -800,7 +800,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: -250, y: -150}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &307128152
@@ -815,11 +815,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6d2d6a4ceff1f034987a9803a96315ec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WeaponIconsUI
-  weaponIcons:
-  - {fileID: 530554585}
-  - {fileID: 742073527}
-  - {fileID: 430540271}
-  - {fileID: 2037290586}
 --- !u!1 &308102047
 GameObject:
   m_ObjectHideFlags: 0
@@ -976,7 +971,7 @@ RectTransform:
   m_GameObject: {fileID: 357456601}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2.5, y: 2.5, z: 1}
+  m_LocalScale: {x: 2, y: 2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1738256062}
@@ -1487,8 +1482,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WeaponIconUI
   inactive: {fileID: 21300000, guid: 52b8af8c732807f4483b33dd0805f4b1, type: 3}
   active: {fileID: 21300000, guid: 848b20138e8f797419915f89c66ef5c9, type: 3}
-  image: {fileID: 430540269}
-  iconLock: {fileID: 769327558}
 --- !u!1 &497788373
 GameObject:
   m_ObjectHideFlags: 0
@@ -1806,8 +1799,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WeaponIconUI
   inactive: {fileID: 21300000, guid: f6ebeb2fa65552c439c354d9e83b5b3c, type: 3}
   active: {fileID: 21300000, guid: 367eb10db8ea89c4f843ee146c45804f, type: 3}
-  image: {fileID: 530554583}
-  iconLock: {fileID: 646418890}
 --- !u!1 &535929437
 GameObject:
   m_ObjectHideFlags: 0
@@ -1834,7 +1825,7 @@ RectTransform:
   m_GameObject: {fileID: 535929437}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 1}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 575149434}
@@ -1844,7 +1835,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 250, y: -150}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &535929439
@@ -2460,8 +2451,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WeaponIconUI
   inactive: {fileID: 21300000, guid: d1365e73682f7aa4ba78927137c25d07, type: 3}
   active: {fileID: 21300000, guid: 48d3d59e57deec542bcfda7fa5615c10, type: 3}
-  image: {fileID: 742073525}
-  iconLock: {fileID: 497788375}
 --- !u!1 &760370602
 GameObject:
   m_ObjectHideFlags: 0
@@ -2490,7 +2479,7 @@ RectTransform:
   m_GameObject: {fileID: 760370602}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2.5, y: 2.5, z: 1}
+  m_LocalScale: {x: 2, y: 2, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1738256062}
@@ -2989,6 +2978,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: d4180209-9680-4db6-8673-02b812802f3b
     m_ActionName: 'Player/Reload[/Keyboard/r]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 783177916}
+        m_TargetAssemblyTypeName: Player, Assembly-CSharp
+        m_MethodName: OnMouseScroll
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: a400b2c0-a92c-4322-8744-c0d3f20e5caf
+    m_ActionName: 'Player/Scroll[/Mouse/scroll]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: Keyboard&Mouse
   m_DefaultActionMap: Player
@@ -5743,7 +5748,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1738256059
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5791,7 +5796,7 @@ Canvas:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1738256058}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_RenderMode: 0
   m_Camera: {fileID: 0}
@@ -6373,8 +6378,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WeaponIconUI
   inactive: {fileID: 21300000, guid: 8b6ee631e10355641bb0886200eabb51, type: 3}
   active: {fileID: 21300000, guid: 7ef4da80b778d9e47bb4ba1b8bc0c59f, type: 3}
-  image: {fileID: 2037290584}
-  iconLock: {fileID: 1634499938}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

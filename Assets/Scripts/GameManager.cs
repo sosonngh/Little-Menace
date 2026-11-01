@@ -32,7 +32,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private HeartsUI heartsContainer;
     [SerializeField] private WeaponIconsHolder weaponIconsHolder;
     [SerializeField] private BossHealthBar bossHealthBar;
-    [SerializeField] private GameObject canvas;
+    [SerializeField] private Canvas canvas;
     [SerializeField] private AudioSource backgroundMusic;
     //
 
@@ -69,6 +69,7 @@ public class GameManager : MonoBehaviour
 
         // ui
         weaponIconsHolder.SetWeaponLocked(currentPhase.latestWeaponUnlockedIndex, false);
+        killScoreText.enabled = true;
 
         if (currentPhase.isNewWeaponUnlocked)
         {
@@ -81,7 +82,7 @@ public class GameManager : MonoBehaviour
             enemySpawner.SpawnBoss();
 
             killScoreText.enabled = false;
-            bossHealthBar.GetComponent<Animator>().Play("BossHealthBarIn");
+            bossHealthBar.PlayAnimationIn();
         }
     }
 
@@ -96,9 +97,8 @@ public class GameManager : MonoBehaviour
 
         if (curHealth <= 0)
         {
-            bossHealthBar.GetComponent<Animator>().Play("BossHealthBarOut");
+            bossHealthBar.PlayAnimationOut();
             ActivatePhase(Array.IndexOf(gamePhaseArr, currentPhase) + 1);
-            killScoreText.enabled = true;
             UpdateKillScoreText(); // ugh
         }
     }
@@ -151,8 +151,15 @@ public class GameManager : MonoBehaviour
         // disable everything
         backgroundMusic.volume = 0.05f;
 
+        // clear all enemies
         enemySpawner.SetIsSpawning(false);
-        canvas.SetActive(false);
+        foreach (GameObject enemy in GameObject.FindGameObjectsWithTag("Enemy"))
+        {
+            enemy.GetComponent<Enemy>().DieByWeapon(WeaponType.AlmightyPush);
+        }
+        bossHealthBar.ResetToDefault();
+
+        canvas.enabled = false;
         foreach (FollowPlayer obj in followPlayerObjects) //ugh
         {
             obj.SetIsFollowing(false);
@@ -160,19 +167,13 @@ public class GameManager : MonoBehaviour
         // (reset phase)
         currentPhase = gamePhaseArr[0];
 
-        // kill all enemies
-        foreach (GameObject enemy in GameObject.FindGameObjectsWithTag("Enemy"))
-        {
-            enemy.GetComponent<Enemy>().DieByWeapon(WeaponType.AlmightyPush);
-        }
-
         // respawn player
         yield return StartCoroutine(player.Respawn());
 
         // enable everything back and reset values;
         backgroundMusic.volume = 0.1f;
 
-        canvas.SetActive(true);
+        canvas.enabled = true;
         ActivatePhase(0);
 
         killCount = 0;
