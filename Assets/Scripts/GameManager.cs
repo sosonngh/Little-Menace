@@ -20,12 +20,14 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; private set; }
 
     private int killCount;
+    private int highScore;
     // infinite mode
     [SerializeField] int killsPerAddEnemy;
     [SerializeField] private int lastMilestone;
 
     // scene objects
     [SerializeField] private TMP_Text killScoreText;
+    [SerializeField] private TMP_Text highScoreText;
     [SerializeField] private CameraShake cameraHolder;
     [SerializeField] private EnemySpawner enemySpawner;
     [SerializeField] private Animator centerNotification;
@@ -34,10 +36,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] private BossHealthBar bossHealthBar;
     [SerializeField] private Canvas canvas;
     [SerializeField] private AudioSource backgroundMusic;
+    [SerializeField] private GameObject NoAmmoMessage;
     //
 
     [SerializeField] private GamePhase[] gamePhaseArr;
-
     public GamePhase currentPhase;
 
     // audio
@@ -56,6 +58,7 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        highScore = PlayerPrefs.GetInt("HighScore", 0);
         StartCoroutine(NewGame());
     }
 
@@ -124,6 +127,25 @@ public class GameManager : MonoBehaviour
         killScoreText.text = $"{killCount} / {currentPhase.nextPhaseMilestone}";
     }
 
+    private void UpdateHighScoreText()
+    {
+        highScoreText.text = $"{highScore}";
+    }
+
+    private void UpdateHighScore()
+    {
+        if (killCount <= highScore) return;
+
+        highScore = killCount;
+        PlayerPrefs.SetInt("HighScore", highScore);
+        PlayerPrefs.Save();
+    }
+
+    public void SpawnNoAmmoMessage()
+    {
+        Instantiate(NoAmmoMessage, canvas.transform);
+    }
+
     public void IncrementKillCount()
     {
         if (currentPhase.isBoss) return;
@@ -131,6 +153,7 @@ public class GameManager : MonoBehaviour
         killCount++;
 
         UpdateKillScoreText();
+        UpdateHighScore();
 
         if (currentPhase.nextPhaseMilestone == -1)
         {
@@ -146,10 +169,15 @@ public class GameManager : MonoBehaviour
 
     }
 
+    public void SetMusicVolume(float volume)
+    {
+        backgroundMusic.volume = Mathf.Clamp01(volume);
+    }
     public IEnumerator NewGame()
     {
+        UpdateHighScoreText();
+
         // disable everything
-        backgroundMusic.volume = 0.05f;
 
         // clear all enemies
         enemySpawner.SetIsSpawning(false);
@@ -171,8 +199,6 @@ public class GameManager : MonoBehaviour
         yield return StartCoroutine(player.Respawn());
 
         // enable everything back and reset values;
-        backgroundMusic.volume = 0.1f;
-
         canvas.enabled = true;
         ActivatePhase(0);
 

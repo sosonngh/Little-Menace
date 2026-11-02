@@ -7,8 +7,6 @@ public class Shotgun : Weapon
     [SerializeField] private int bulletsPerShot;
     [SerializeField] private float angularRecoilForce;
 
-    [SerializeField] private FollowMouse weaponHolder;
-
 
     protected override void SpecificAttackBehaviour()
     {

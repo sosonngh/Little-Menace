@@ -16,11 +16,4 @@ public class KnifeSprite : WeaponSprite
         animator.Play("Attack", 0, 0f);
     }
 
-    // idk i doenst do i want it to do
-    private void OnEnable()
-    {
-        animator.Rebind();
-        animator.Play("Idle", 0, 0f);
-    }
-
 }

@@ -1,10 +1,7 @@
 fileFormatVersion: 2
 guid: a2a66ef4ecfbd0f41b3dda033907055b
 TextureImporter:
-  internalIDToNameTable:
-  - first:
-      213: 6764707825347140516
-    second: Knife_0
+  internalIDToNameTable: []
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,12 +110,12 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Knife_0
+      name: WeaponIcon-1_0
       rect:
         serializedVersion: 2
-        x: 11
+        x: 0
         y: 0
-        width: 10
+        width: 32
         height: 32
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -128,8 +125,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 4ab1f1b1de111ed50800000000000000
-      internalID: 6764707825347140516
+      spriteID: 00beb1b487b8ae1a0800000000000000
+      internalID: -6779452940280403200
       vertices: []
       indices: 
       edges: []
@@ -148,7 +145,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Knife_0: 6764707825347140516
+      WeaponIcon-1_0: -6779452940280403200
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

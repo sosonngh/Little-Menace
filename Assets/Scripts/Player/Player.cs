@@ -20,14 +20,19 @@ public class Player : MonoBehaviour
     [SerializeField] PlayerSprite sprite;
 
     [SerializeField] private Transform weaponHolder;
+    private FollowMouse weaponHolderScript;
     private Weapon curWeapon;
+    private int curWeaponIndex = -1; // none by default
     private bool isAttacking;
-    private int selectedWeaponIndex;
+    private bool canAttack = true;
+    private Coroutine drawCoroutine;
 
     private Vector2 recoilVelocity;
 
     private AudioSource audioSource;
     [SerializeField] AudioClip gameOverClip;
+    [SerializeField] GameObject deathBloodFx;
+    [SerializeField] GameObject deathSubBloodFx;
 
     [SerializeField] KnifeProp knifePropPrefab;
 
@@ -38,6 +43,7 @@ public class Player : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         audioSource = GetComponent<AudioSource>();
+        weaponHolderScript = weaponHolder.GetComponent<FollowMouse>();
     }
 
     // getting hit
@@ -70,6 +76,7 @@ public class Player : MonoBehaviour
     private void SwitchWeapon(int weaponIndex)
     {
         if (!IsActive) return;
+        if (curWeaponIndex == weaponIndex) return;
 
         // check if the weapon is unlocked
         if (GameManager.Instance.currentPhase.latestWeaponUnlockedIndex < weaponIndex) return;
@@ -82,7 +89,26 @@ public class Player : MonoBehaviour
 
         GameManager.Instance.SetSelectedWeaponUI(weaponIndex);
 
-        selectedWeaponIndex = weaponIndex;
+        curWeaponIndex = weaponIndex;
+
+        if (drawCoroutine != null)
+        {
+            StopCoroutine(drawCoroutine);
+            drawCoroutine = null;
+        }
+
+        drawCoroutine = StartCoroutine(DrawWeapon());
+    }
+
+    private IEnumerator DrawWeapon()
+    {
+        canAttack = false;
+
+        yield return weaponHolderScript.StartDrawWeapon();
+
+        canAttack = true;
+
+        drawCoroutine = null;
     }
 
     private void DeselectWeapon()
@@ -139,20 +165,19 @@ public class Player : MonoBehaviour
         if (!IsActive) return;
 
         float direction = context.ReadValue<Vector2>().y;
-        if (direction > 0)
+        int newIndex = curWeaponIndex;
+
+        if (direction > 0 && newIndex < GameManager.Instance.currentPhase.latestWeaponUnlockedIndex)
         {
-            selectedWeaponIndex--;
+            newIndex++;
         }
-        else if (direction < 0)
+        else if (direction < 0 && newIndex > 0)
         {
-            selectedWeaponIndex++;
+            newIndex--;
         }
 
-        // find weapon index based on initial value and number of weapons unlocked
-        int weaponsUnlockedNum = GameManager.Instance.currentPhase.latestWeaponUnlockedIndex + 1;        
-        selectedWeaponIndex = (selectedWeaponIndex % weaponsUnlockedNum + weaponsUnlockedNum) % weaponsUnlockedNum;
-
-        SwitchWeapon(selectedWeaponIndex);
+        SwitchWeapon(newIndex);
+        
     }
     //
 
@@ -186,16 +211,21 @@ public class Player : MonoBehaviour
         audioSource.PlayOneShot(gameOverClip);
         IsActive = false;
 
-        yield return new WaitForSeconds(3f); // ANIMATION HERE
+        GameManager.Instance.SetMusicVolume(0);
+
+        yield return StartCoroutine(sprite.ExplodeCoroutine(3f));
 
         sprite.SetSrEnabled(false);
 
+        Instantiate(deathBloodFx, transform.position, Quaternion.identity);
+        Instantiate(deathSubBloodFx, transform.position, Quaternion.identity);
         Instantiate(knifePropPrefab, transform.position, Quaternion.identity);
     }
 
     public IEnumerator Respawn()
     {
         DeselectWeapon();
+        curWeaponIndex = -1;
         IsSpinning = false;
         isAttacking = false;
         rb.angularVelocity = 0f;
@@ -233,6 +263,7 @@ public class Player : MonoBehaviour
         SwitchWeapon(0);
         curHealth = maxHealth;
         GameManager.Instance.UpdateHealthUI(curHealth);
+        GameManager.Instance.SetMusicVolume(0.1f);
 
     }
 
@@ -277,7 +308,7 @@ public class Player : MonoBehaviour
     {
         if (!IsActive) return;
 
-        if (isAttacking) curWeapon.Attack();
+        if (isAttacking && canAttack) curWeapon.Attack();
 
     }
 

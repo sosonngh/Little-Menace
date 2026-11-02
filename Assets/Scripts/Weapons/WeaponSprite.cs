@@ -6,7 +6,6 @@ public class WeaponSprite : MonoBehaviour
     private FollowMouse mouseScript;
 
     [SerializeField] private GameObject muzzleFlash;
-    [SerializeField] private float muzzleSpawnOffsetX;
 
     private void Awake()
     {
@@ -20,10 +19,7 @@ public class WeaponSprite : MonoBehaviour
     
     public virtual void AttackAnimation()
     {
-        Vector2 spawnPos = (Vector2)transform.position + (Vector2)transform.right * muzzleSpawnOffsetX;
-
-        // im crine
-        Instantiate(muzzleFlash, spawnPos, transform.rotation);
+        Instantiate(muzzleFlash, transform.position, transform.rotation);
     }
 
     private void Update()

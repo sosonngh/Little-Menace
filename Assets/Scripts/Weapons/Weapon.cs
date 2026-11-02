@@ -22,14 +22,14 @@ public abstract class Weapon : MonoBehaviour
     [SerializeField] private int maxAmmo;
     private int curAmmo;
 
-    private const float ANIMATION_DURATION = 0.5f;
+    private const float RELOAD_ANIMATION_DURATION = 0.5f;
     [SerializeField] private float reloadDuration;
     [SerializeField] private Animator reloadAnimator;
     private Coroutine reloadCoroutine = null;
 
-    private AudioSource audioSource;
     [SerializeField] private AudioClip attackClip;
     [SerializeField] private AudioClip noAmmoClip;
+    [SerializeField] float audioVolume;
 
     [SerializeField] private float damage;
 
@@ -38,7 +38,6 @@ public abstract class Weapon : MonoBehaviour
     private void Awake()
     {
         ResetAmmo();
-        audioSource = GetComponent<AudioSource>();
     }
 
     private void OnEnable()
@@ -85,7 +84,8 @@ public abstract class Weapon : MonoBehaviour
 
         if (curAmmo == 0)
         {
-            audioSource.PlayOneShot(noAmmoClip);
+            GameManager.Instance.SpawnNoAmmoMessage();
+            PlayTemporarySound(noAmmoClip);
             nextAttackTime = Time.time + attackCooldown;
             return;
         }
@@ -97,14 +97,28 @@ public abstract class Weapon : MonoBehaviour
 
         nextAttackTime = Time.time + attackCooldown;
 
-        audioSource.pitch = Random.Range(0.8f, 1.2f);
-        audioSource.PlayOneShot(attackClip);
+        PlayTemporarySound(attackClip);
 
         if (weaponType != WeaponType.AlmightyPush)
         {
             sprite.AttackAnimation();
         }
         
+    }
+
+    private void PlayTemporarySound(AudioClip clip)
+    {
+        GameObject temp = new("TemporaryAudioSource");
+
+        temp.transform.position = transform.position;
+
+        AudioSource audioSource = temp.AddComponent<AudioSource>();
+        audioSource.clip = clip;
+        audioSource.pitch = Random.Range(0.8f, 1.2f);
+        audioSource.volume = Mathf.Clamp01(audioVolume);
+        audioSource.Play();
+
+        Destroy(temp, clip.length);
     }
 
     public void ResetAmmo()
@@ -128,7 +142,7 @@ public abstract class Weapon : MonoBehaviour
         if (curAmmo == maxAmmo) return;
 
         reloadCoroutine = StartCoroutine(ReloadCoroutine());
-        reloadAnimator.speed = ANIMATION_DURATION / reloadDuration;
+        reloadAnimator.speed = RELOAD_ANIMATION_DURATION / reloadDuration;
         reloadAnimator.Play("Reload");
     }
 

@@ -39,6 +39,7 @@ public class BossHealthBar : MonoBehaviour
     {
         animator.Play("Idle");
         SetHealth(1, 1);
+        trailingBar.sizeDelta = healthBar.sizeDelta;
         rectTransform.anchoredPosition = initialPos;
     }
 
