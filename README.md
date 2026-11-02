@@ -1,6 +1,10 @@
 # Little Menace
-Source files for [Little Menace](https://sosonn.itch.io/little-menace), a game on itch.io.
+Source files for Little Menace, a game on itch.io.
 The game was made with Unity in 3 days for the Jame Gam Game Jam (for teenagers!).
+
+Jame Gam version link --> https://sosonn.itch.io/little-menace
+
+Savepoint version link --> https://sosonn.itch.io/little-menace-temp (the latest version)
 
 Proud **57th** place 😭
 
