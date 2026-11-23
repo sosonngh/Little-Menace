@@ -1,21 +1,19 @@
 # Little Menace
 Source files for Little Menace, a game on itch.io.
-The game was made with Unity in 3 days for the Jame Gam Game Jam (for teenagers!).
+The game was made with Unity in 3 days for the [Jame Gam Game Jam (for teenagers!)](https://itch.io/jam/jame-gam-game-jam).
 
-Jame Gam version link --> https://sosonn.itch.io/little-menace
-
-Savepoint version link --> https://sosonn.itch.io/little-menace-temp (the latest version)
+The game link --> https://sosonn.itch.io/little-menace
 
 Proud **57th** place 😭
 
 ## Game Description
-You've got 3 lives and a whole army of foes to take down. As you kill more enemies, you will unlock new weapons with greater destructive power. Be careful, those guns are BIG.
+You've got 3 lives and a whole army of foes to take down. As you kill more enemies, you will unlock new weapons with greater destructive power. Kill as many zombies as you can, but be careful, those guns are BIG.
 
 ### Controls:
 - WASD - Move
 - Mouse - Aim
 - Left Click - Attack / Shoot
-- 1 / 2 / 3 / 4 - Switch weapons
+- 1 / 2 / 3 / 4 or Mouse Scroll - Switch weapons
 - R - Reload
 
 ### Credits:
